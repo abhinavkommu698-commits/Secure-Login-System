@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Secure Login System{% endblock %}
+
+{% block extra_head %}
+<style>
+    .cyber-card-register {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .password-strength-bar {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--cyber-border);
+        overflow: hidden;
+        margin-top: 6px;
+    }
+    .password-strength-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: all 0.4s ease;
+        width: 0%;
+    }
+    .strength-weak { background: #ef4444; width: 25%; }
+    .strength-fair { background: #f59e0b; width: 50%; }
+    .strength-good { background: #3b82f6; width: 75%; }
+    .strength-strong { background: #00ff41; width: 100%; }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Navigation -->
+<nav class="cyber-nav navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <i class="bi bi-shield-lock-fill text-primary fs-3"></i>
+            <span class="glow-text fw-bold fs-5">SecureAuth</span>
+        </a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/"><i class="bi bi-house-door me-2"></i>Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 140px; padding-bottom: 140px;">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="cyber-card cyber-card-register p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; border-radius: 16px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2);">
+                        <i class="bi bi-person-plus-fill fs-3 text-primary"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Create Account</h2>
+                    <p class="text-muted small">Sign up with strong credentials</p>
+                </div>
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {% if category == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>{% endif %}
+                                {% if category == 'danger' %}<i class="bi bi-exclamation-octagon-fill me-2"></i>{% endif %}
+                                {% if category == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label small fw-semibold text-white">
+                            <i class="bi bi-person me-2"></i>Username
+                        </label>
+                        {{ form.username(class="form-control input-cyber" + (" is-invalid" if form.username.errors else ""), placeholder="Choose a username", autocomplete="username") }}
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label small fw-semibold text-white">
+                            <i class="bi bi-envelope me-2"></i>Email
+                        </label>
+                        {{ form.email(class="form-control input-cyber" + (" is-invalid" if form.email.errors else ""), placeholder="you@example.com", autocomplete="email") }}
+                        {% if form.email.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label small fw-semibold text-white">
+                            <i class="bi bi-key me-2"></i>Password
+                        </label>
+                        <div class="input-group">
+                            {{ form.password(class="form-control input-cyber" + (" is-invalid" if form.password.errors else ""), placeholder="Min. 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char", autocomplete="new-password", id="passwordInput") }}
+                            <button class="btn btn-outline-secondary border-0" type="button" onclick="togglePasswordVisibility(this)" style="border-color: var(--cyber-border) !important; color: #94a3b8;">
+                                <i class="bi bi-eye-slash" id="passwordToggleIcon"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.password.errors %}
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="password-strength-bar" style="margin-top: 8px;">
+                            <div id="strengthFill" class="password-strength-fill"></div>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                            Must contain: uppercase, lowercase, digit & special character (!@#$%^&*)
+                        </small>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label small fw-semibold text-white">
+                            <i class="bi bi-key-fill me-2"></i>Confirm Password
+                        </label>
+                        <div class="input-group">
+                            {{ form.confirm_password(class="form-control input-cyber" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Re-enter your password", autocomplete="new-password", id="confirmPasswordInput") }}
+                            <button class="btn btn-outline-secondary border-0" type="button" onclick="togglePasswordVisibility(this)" style="border-color: var(--cyber-border) !important; color: #94a3b8;">
+                                <i class="bi bi-eye-slash" id="confirmPasswordToggleIcon"></i>
+                            </button>
+                        </div>
+                        {% if form.confirm_password.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.confirm_password.errors %}
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid mb-3">
+                        {{ form.submit(class="cyber-btn btn btn-lg w-100") }}
+                    </div>
+
+                    <div class="text-center">
+                        <span class="text-muted small">Already have an account? </span>
+                        <a href="/login" class="small text-decoration-none" style="color: var(--cyber-primary);">Sign in here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

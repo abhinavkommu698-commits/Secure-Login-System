@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Account Lockout Policy | Secure Login System{% endblock %}
+
+{% block body %}
+
+<nav class="cyber-nav navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <i class="bi bi-shield-lock-fill text-primary fs-3"></i>
+            <span class="glow-text fw-bold fs-5">SecureAuth</span>
+        </a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 140px; padding-bottom: 140px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="cyber-card p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; border-radius: 16px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2);">
+                        <i class="bi bi-lock-fill fs-2 text-warning"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Account Security Policy</h2>
+                    <p class="text-muted small">Understanding our account lockout protections</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold text-white mb-3"><i class="bi bi-shield-check me-2 text-primary"></i>Why Account Lockout?</h3>
+                    <p class="text-muted small mb-3">To protect against brute-force attacks and credential stuffing, we implement an automatic account lockout policy. After multiple failed login attempts, your account is temporarily locked.</p>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="cyber-card p-3 text-center">
+                                <span class="fw-bold fs-4 text-warning">5</span>
+                                <p class="text-muted small mb-0">Max Failed Attempts</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="cyber-card p-3 text-center">
+                                <span class="fw-bold fs-4 text-warning">15 min</span>
+                                <p class="text-muted small mb-0">Lockout Duration</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="cyber-card p-3 text-center">
+                                <span class="fw-bold fs-4 text-success">Auto</span>
+                                <p class="text-muted small mb-0">Reset on Success</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border-color: var(--cyber-border);">
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold text-white mb-3"><i class="bi bi-lightbulb me-2 text-primary"></i>Best Practices</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Use a strong, unique password (min. 8 characters with uppercase, lowercase, digit, and special character).</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Enable two-factor authentication if available.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Never share your credentials with anyone.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Contact support if you're locked out unexpectedly.</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Failed attempts reset after 15 minutes.</li>
+                    </ul>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/login" class="cyber-btn btn"><i class="bi bi-box-arrow-in-right me-2"></i>Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
